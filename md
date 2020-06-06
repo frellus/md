@@ -12,6 +12,7 @@ INDEX_HEADER_FILE     = "README-header.md"
 INDEX_FOOTER_FILE     = "README-footer.md"
 INDEX_OUTPUT          = "README.md"
 MD_TEMPLATE           = "TEMPLATE.md"
+MD_IGNORE             = ".md-ignore"
 MAX_CATEGORY_DEPTH    = 5
 MARKDOWN_ROOT_DEFAULT = "./"
 
@@ -54,6 +55,11 @@ def main():
     except Exception as e:
         print(f'error: accessing document root: ', e)
         sys.exit(3)
+
+    # Error out of the root has a ".md-ignore" file so we don't accidentally overwrite a hand-edited README.md file
+    if os.path.exists(MD_IGNORE):
+        print(f'Exiting due to {MD_IGNORE} file in markdown root directory {markdown_root} (will not overwrite {INDEX_OUTPUT})')
+        sys.exit(4)
 
     # Check the action to perform
     if args.index:
